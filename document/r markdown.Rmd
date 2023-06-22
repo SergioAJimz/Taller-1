@@ -1,0 +1,28 @@
+---
+title: "Taller 1"
+author: "Sergio jimenez"
+date: "2023-06-21"
+output: html_document
+---
+
+```{r}
+# Obtener las estadísticas descriptivas para cada variable en GEIH
+stats_table <- GEIH %>%
+  summarise(across(everything(), list(
+    media = mean,
+    sd = sd,
+    min = min,
+    max = max
+  )))
+
+# Transformar la tabla de estadísticas descriptivas en el formato deseado
+stats_table <- stats_table %>%
+  pivot_longer(everything(), names_to = "Estadistica", values_to = "Valor") %>%
+  separate(Estadistica, into = c("Variable", "Estadistica"), sep = "_") %>%
+  pivot_wider(names_from = Estadistica, values_from = Valor) %>%
+  select(Variable, media, sd, min, max)
+
+# Imprimir la tabla de estadísticas descriptivas
+print(stats_table)
+```
+
